@@ -74,6 +74,42 @@
           </table>
         </div>
       </div>
+
+      <!-- Submitted restocking orders — created from the Restocking Planner tab -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ t('orders.restockingOrders.sectionTitle') }} ({{ restockingOrders.length }})</h3>
+        </div>
+        <div v-if="restockingLoading" class="loading">{{ t('common.loading') }}</div>
+        <div v-else-if="restockingError" class="error">{{ restockingError }}</div>
+        <div v-else-if="restockingOrders.length === 0" class="loading">{{ t('orders.restockingOrders.noOrders') }}</div>
+        <div v-else class="table-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th class="col-order-number">{{ t('orders.restockingOrders.orderNumber') }}</th>
+                <th class="col-items">{{ t('orders.table.items') }}</th>
+                <th class="col-status">{{ t('orders.restockingOrders.status') }}</th>
+                <th class="col-date">{{ t('orders.restockingOrders.submittedDate') }}</th>
+                <th class="col-date">{{ t('orders.restockingOrders.expectedDelivery') }}</th>
+                <th class="col-value">{{ t('orders.restockingOrders.totalValue') }}</th>
+                <th class="col-date">{{ t('orders.restockingOrders.leadTime') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in restockingOrders" :key="order.id">
+                <td class="col-order-number"><strong>{{ order.order_number }}</strong></td>
+                <td class="col-items">{{ t('orders.restockingOrders.itemCount', { count: order.items.length }) }}</td>
+                <td class="col-status"><span class="badge info">{{ order.status }}</span></td>
+                <td class="col-date">{{ formatDate(order.order_date) }}</td>
+                <td class="col-date">{{ formatDate(order.expected_delivery) }}</td>
+                <td class="col-value"><strong>{{ currencySymbol }}{{ order.total_value.toLocaleString() }}</strong></td>
+                <td class="col-date"><span class="badge info">{{ t('orders.restockingOrders.leadTimeDays', { days: order.lead_time_days }) }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -153,7 +189,27 @@ export default {
       })
     }
 
-    onMounted(loadOrders)
+    // Restocking orders — fetched independently from customer orders
+    const restockingOrders = ref([])
+    const restockingLoading = ref(false)
+    const restockingError = ref(null)
+
+    const loadRestockingOrders = async () => {
+      try {
+        restockingLoading.value = true
+        restockingError.value = null
+        restockingOrders.value = await api.getRestockingOrders()
+      } catch (err) {
+        restockingError.value = 'Failed to load restocking orders: ' + err.message
+      } finally {
+        restockingLoading.value = false
+      }
+    }
+
+    onMounted(() => {
+      loadOrders()
+      loadRestockingOrders()
+    })
 
     return {
       t,
@@ -165,7 +221,10 @@ export default {
       formatDate,
       currencySymbol,
       translateProductName,
-      translateCustomerName
+      translateCustomerName,
+      restockingOrders,
+      restockingLoading,
+      restockingError
     }
   }
 }
