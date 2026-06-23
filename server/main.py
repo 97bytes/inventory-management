@@ -6,6 +6,10 @@ from mock_data import inventory_items, orders, demand_forecasts, backlog_items, 
 
 app = FastAPI(title="Factory Inventory Management System")
 
+# In-memory store for submitted restocking orders (resets on server restart)
+restocking_orders: list = []
+_restocking_counter = 0
+
 # Quarter mapping for date filtering
 QUARTER_MAP = {
     'Q1-2025': ['2025-01', '2025-02', '2025-03'],
@@ -89,6 +93,8 @@ class DemandForecast(BaseModel):
     forecasted_demand: int
     trend: str
     period: str
+    unit_cost: float
+    category: str
 
 class BacklogItem(BaseModel):
     id: str
@@ -119,6 +125,27 @@ class CreatePurchaseOrderRequest(BaseModel):
     unit_cost: float
     expected_delivery_date: str
     notes: Optional[str] = None
+
+class RestockingOrderItem(BaseModel):
+    sku: str
+    name: str
+    quantity: int
+    unit_price: float
+    lead_time_days: int
+
+class CreateRestockingOrderRequest(BaseModel):
+    items: List[RestockingOrderItem]
+    budget: float
+
+class RestockingOrder(BaseModel):
+    id: str
+    order_number: str
+    items: List[dict]
+    status: str
+    order_date: str
+    expected_delivery: str
+    total_value: float
+    lead_time_days: int
 
 # API endpoints
 @app.get("/")
@@ -303,6 +330,33 @@ def get_monthly_trends():
     result = list(months.values())
     result.sort(key=lambda x: x['month'])
     return result
+
+@app.get("/api/restocking-orders", response_model=List[RestockingOrder])
+def get_restocking_orders():
+    """Get all submitted restocking orders."""
+    return restocking_orders
+
+@app.post("/api/restocking-orders", response_model=RestockingOrder, status_code=201)
+def create_restocking_order(request: CreateRestockingOrderRequest):
+    """Submit a restocking order from the Restocking planner."""
+    global _restocking_counter
+    _restocking_counter += 1
+    from datetime import datetime, timedelta
+    now = datetime.utcnow()
+    max_lead = max((i.lead_time_days for i in request.items), default=10)
+    total = sum(i.quantity * i.unit_price for i in request.items)
+    order = {
+        "id": str(_restocking_counter),
+        "order_number": f"RESTOCK-{now.year}-{_restocking_counter:04d}",
+        "items": [{"sku": i.sku, "name": i.name, "quantity": i.quantity, "unit_price": i.unit_price} for i in request.items],
+        "status": "Submitted",
+        "order_date": now.isoformat(),
+        "expected_delivery": (now + timedelta(days=max_lead)).isoformat(),
+        "total_value": round(total, 2),
+        "lead_time_days": max_lead,
+    }
+    restocking_orders.append(order)
+    return order
 
 if __name__ == "__main__":
     import uvicorn
