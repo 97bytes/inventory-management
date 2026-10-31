@@ -6,8 +6,11 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
-    subtitle: 'Inventory Management System'
+    subtitle: 'Inventory Management System',
+    primary: 'Primary navigation',
+    menu: 'Open navigation menu'
   },
 
   // Dashboard
@@ -125,8 +128,17 @@ export default {
       totalValue: 'Total Value',
       status: 'Status',
       expectedDelivery: 'Expected Delivery',
-      actualDelivery: 'Actual Delivery'
-    }
+      actualDelivery: 'Actual Delivery',
+      submittedDate: 'Submitted',
+      totalCost: 'Total Cost',
+      leadTime: 'Lead Time'
+    },
+    // Restocking orders submitted from the Restocking tab
+    submittedOrders: 'Submitted Orders',
+    submittedStatus: 'Submitted',
+    leadTimeDays: '{days} days',
+    unitCostEach: '{cost} each',
+    noSubmittedOrders: 'No restocking orders have been submitted yet'
   },
 
   // Finance/Spending
@@ -186,6 +198,45 @@ export default {
       trend: 'Trend',
       period: 'Period'
     }
+  },
+
+  // Restocking
+  restocking: {
+    title: 'Restocking',
+    subtitle: 'Recommended purchase quantities for forecasted demand, within your budget',
+    budgetTitle: 'Restocking Budget',
+    budgetLabel: 'Budget',
+    budgetHelp: 'Drag the slider to set how much you want to spend. Recommendations update automatically.',
+    budgetMin: 'Min',
+    budgetMax: 'Max',
+    stats: {
+      itemsRecommended: 'Items Recommended',
+      totalCost: 'Total Cost',
+      remainingBudget: 'Remaining Budget',
+      leadTime: 'Estimated Lead Time'
+    },
+    leadTimeDays: '{days} days',
+    recommendations: 'Recommended Items',
+    table: {
+      sku: 'SKU',
+      itemName: 'Item Name',
+      trend: 'Trend',
+      forecastedDemand: 'Forecasted Demand',
+      onHand: 'On Hand',
+      recommendedQty: 'Recommended Qty',
+      unitCost: 'Unit Cost',
+      lineTotal: 'Line Total',
+      leadTime: 'Lead Time',
+      supplier: 'Supplier'
+    },
+    empty: 'No items can be restocked within this budget. Increase the budget to see recommendations.',
+    placeOrder: 'Place Order',
+    placing: 'Placing order...',
+    updating: 'Updating recommendations...',
+    success: 'Order {orderNumber} was submitted.',
+    viewInOrders: 'View in Orders',
+    error: 'Failed to place the order. Please try again.',
+    loadError: 'Failed to load restocking recommendations'
   },
 
   // Filters

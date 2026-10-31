@@ -74,6 +74,53 @@
           </table>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ t('orders.submittedOrders') }} ({{ submittedOrders.length }})</h3>
+        </div>
+        <div v-if="submittedOrders.length === 0" class="empty-state">{{ t('orders.noSubmittedOrders') }}</div>
+        <div v-else class="table-container submitted-table-container">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th class="col-order-number">{{ t('orders.table.orderNumber') }}</th>
+                <th class="col-date">{{ t('orders.table.submittedDate') }}</th>
+                <th class="col-items">{{ t('orders.table.items') }}</th>
+                <th class="col-value">{{ t('orders.table.totalCost') }}</th>
+                <th class="col-lead-time">{{ t('orders.table.leadTime') }}</th>
+                <th class="col-date">{{ t('orders.table.expectedDelivery') }}</th>
+                <th class="col-status">{{ t('orders.table.status') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in submittedOrders" :key="order.id">
+                <td class="col-order-number"><strong>{{ order.order_number }}</strong></td>
+                <td class="col-date">{{ formatDate(order.created_date) }}</td>
+                <td class="col-items">
+                  <details class="items-details">
+                    <summary class="items-summary">
+                      {{ t('orders.itemsCount', { count: order.items.length }) }}
+                    </summary>
+                    <div class="items-dropdown">
+                      <div v-for="item in order.items" :key="item.sku" class="item-entry">
+                        <span class="item-name">{{ translateProductName(item.name) }}</span>
+                        <span class="item-meta">{{ t('orders.quantity') }}: {{ item.quantity }} @ {{ formatCurrencyWithDecimals(item.unit_cost, currentCurrency, 2) }}</span>
+                      </div>
+                    </div>
+                  </details>
+                </td>
+                <td class="col-value"><strong>{{ formatCurrencyWithDecimals(order.total_cost, currentCurrency, 2) }}</strong></td>
+                <td class="col-lead-time">{{ t('orders.leadTimeDays', { days: order.lead_time_days }) }}</td>
+                <td class="col-date">{{ formatDate(order.expected_delivery) }}</td>
+                <td class="col-status">
+                  <span class="badge info">{{ t('orders.submittedStatus') }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +130,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { api } from '../api'
 import { useFilters } from '../composables/useFilters'
 import { useI18n } from '../composables/useI18n'
+import { formatCurrency, formatCurrencyWithDecimals } from '../utils/currency'
 
 export default {
   name: 'Orders',
@@ -95,6 +143,7 @@ export default {
     const loading = ref(true)
     const error = ref(null)
     const orders = ref([])
+    const submittedOrders = ref([])
 
     // Use shared filters
     const {
@@ -124,6 +173,18 @@ export default {
       }
     }
 
+    // Restocking orders live in their own endpoint and are not affected by the page
+    // filters, so this is not part of the filter watch below. It has its own
+    // try/catch so a failure here never blanks the main orders table.
+    const loadSubmittedOrders = async () => {
+      try {
+        submittedOrders.value = await api.getRestockingOrders()
+      } catch (err) {
+        submittedOrders.value = []
+        console.error('Failed to load submitted restocking orders:', err)
+      }
+    }
+
     // Watch for filter changes and reload data
     watch([selectedPeriod, selectedLocation, selectedCategory, selectedStatus], () => {
       loadOrders()
@@ -146,24 +207,34 @@ export default {
     const formatDate = (dateString) => {
       const { currentLocale } = useI18n()
       const locale = currentLocale.value === 'ja' ? 'ja-JP' : 'en-US'
-      return new Date(dateString).toLocaleDateString(locale, {
+      // Validate before formatting so a bad value shows a dash instead of "Invalid Date"
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) return '-'
+      return date.toLocaleDateString(locale, {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       })
     }
 
-    onMounted(loadOrders)
+    onMounted(() => {
+      loadOrders()
+      loadSubmittedOrders()
+    })
 
     return {
       t,
       loading,
       error,
       orders,
+      submittedOrders,
       getOrdersByStatus,
       getOrderStatusClass,
       formatDate,
       currencySymbol,
+      currentCurrency,
+      formatCurrency,
+      formatCurrencyWithDecimals,
       translateProductName,
       translateCustomerName
     }
@@ -172,6 +243,11 @@ export default {
 </script>
 
 <style scoped>
+/* Keep order IDs like "ORD-2025-0004" on one line in the narrower content column */
+td:first-child {
+  white-space: nowrap;
+}
+
 /* Fixed table layout to prevent column shifting */
 .orders-table {
   table-layout: fixed;
@@ -201,6 +277,23 @@ export default {
 
 .col-value {
   width: 120px;
+}
+
+.col-lead-time {
+  width: 110px;
+}
+
+/* Let the items dropdown overflow the card instead of scrolling inside it
+   (the table is short, so an absolute dropdown would otherwise be clipped) */
+.submitted-table-container {
+  overflow: visible;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #64748b;
+  font-size: 0.938rem;
 }
 
 /* Items details styling */

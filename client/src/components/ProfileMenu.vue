@@ -124,12 +124,13 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 0.5rem 0.875rem;
+  padding: 0.25rem 0.75rem;
+  height: 38px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 150ms ease, border-color 150ms ease;
   font-family: inherit;
 }
 
@@ -174,8 +175,8 @@ const handleLogout = () => {
   min-width: 280px;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
   z-index: 1000;
   overflow: hidden;
 }

@@ -243,7 +243,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
+  /* .card already provides padding; the global card-header supplies spacing/border */
+  padding: 0 0 1rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -273,19 +274,19 @@ export default {
 .search-input {
   width: 100%;
   padding: 0.5rem 2.5rem 0.5rem 2.5rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 0.875rem;
   color: #0f172a;
   background: #f8fafc;
-  transition: all 0.2s;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
 }
 
 .search-input:focus {
   outline: none;
   border-color: #3b82f6;
   background: white;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .search-input::placeholder {
@@ -326,6 +327,11 @@ export default {
 
 .error {
   color: #ef4444;
+}
+
+/* Keep SKUs like "TMP-201" on one line in the narrower content column */
+td:first-child {
+  white-space: nowrap;
 }
 
 .clickable-row {

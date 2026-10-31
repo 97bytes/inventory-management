@@ -761,8 +761,14 @@ export default {
 .kpi-card {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  padding: 1.25rem;
+}
+
+/* Keep order IDs / SKUs ("ORD-2025-0927") on one line in the narrower content column */
+td:nth-child(-n + 2) > strong {
+  white-space: nowrap;
 }
 
 .kpi-header {
