@@ -1,0 +1,11 @@
+[
+  {"item_sku": "WDG-001", "unit_cost": 48.50, "lead_time_days": 14, "supplier": "Northwind Components"},
+  {"item_sku": "BRG-102", "unit_cost": 27.40, "lead_time_days": 10, "supplier": "Alpine Bearings GmbH"},
+  {"item_sku": "GSK-203", "unit_cost": 12.75, "lead_time_days": 7, "supplier": "SealTech Industrial"},
+  {"item_sku": "MTR-304", "unit_cost": 215.00, "lead_time_days": 21, "supplier": "Voltaic Motors"},
+  {"item_sku": "FLT-405", "unit_cost": 26.00, "lead_time_days": 5, "supplier": "ClearFlow Filtration"},
+  {"item_sku": "VLV-506", "unit_cost": 64.90, "lead_time_days": 12, "supplier": "Meridian Valve Works"},
+  {"item_sku": "PSU-501", "unit_cost": 18.99, "lead_time_days": 9, "supplier": "Pacific Power Systems"},
+  {"item_sku": "SNR-420", "unit_cost": 41.25, "lead_time_days": 18, "supplier": "Sensora Electronics"},
+  {"item_sku": "CTL-330", "unit_cost": 88.00, "lead_time_days": 16, "supplier": "Helix Controls"}
+]

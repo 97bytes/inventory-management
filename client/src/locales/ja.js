@@ -6,8 +6,11 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restocking: '補充発注',
     companyName: '触媒コンポーネンツ',
-    subtitle: '在庫管理システム'
+    subtitle: '在庫管理システム',
+    primary: 'メインナビゲーション',
+    menu: 'ナビゲーションメニューを開く'
   },
 
   // Dashboard
@@ -125,8 +128,17 @@ export default {
       totalValue: '合計金額',
       status: 'ステータス',
       expectedDelivery: '予定配達日',
-      actualDelivery: '実際の配達日'
-    }
+      actualDelivery: '実際の配達日',
+      submittedDate: '発注日',
+      totalCost: '合計コスト',
+      leadTime: 'リードタイム'
+    },
+    // Restocking orders submitted from the Restocking tab
+    submittedOrders: '発注済み補充注文',
+    submittedStatus: '発注済み',
+    leadTimeDays: '{days}日',
+    unitCostEach: '単価 {cost}',
+    noSubmittedOrders: '補充注文はまだ発注されていません'
   },
 
   // Finance/Spending
@@ -186,6 +198,45 @@ export default {
       trend: 'トレンド',
       period: '期間'
     }
+  },
+
+  // Restocking
+  restocking: {
+    title: '補充発注',
+    subtitle: '予測需要に基づく推奨発注数量を予算内で提案します',
+    budgetTitle: '補充予算',
+    budgetLabel: '予算',
+    budgetHelp: 'スライダーで予算を設定してください。推奨内容は自動的に更新されます。',
+    budgetMin: '最小',
+    budgetMax: '最大',
+    stats: {
+      itemsRecommended: '推奨品目数',
+      totalCost: '合計コスト',
+      remainingBudget: '残り予算',
+      leadTime: '推定リードタイム'
+    },
+    leadTimeDays: '{days}日',
+    recommendations: '推奨品目',
+    table: {
+      sku: 'SKU',
+      itemName: '品目名',
+      trend: 'トレンド',
+      forecastedDemand: '予測需要',
+      onHand: '手持ち在庫',
+      recommendedQty: '推奨数量',
+      unitCost: '単価',
+      lineTotal: '小計',
+      leadTime: 'リードタイム',
+      supplier: '仕入先'
+    },
+    empty: 'この予算内で補充できる品目はありません。予算を増やすと推奨が表示されます。',
+    placeOrder: '発注する',
+    placing: '発注中...',
+    updating: '推奨内容を更新中...',
+    success: '注文 {orderNumber} を発注しました。',
+    viewInOrders: '注文で確認',
+    error: '発注に失敗しました。もう一度お試しください。',
+    loadError: '補充の推奨内容を読み込めませんでした'
   },
 
   // Filters

@@ -101,78 +101,79 @@ export default {
 </script>
 
 <style scoped>
+/* Lives inside the App topbar, which provides background, border and stickiness. */
 .filters-bar {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 0.75rem 0;
-  position: sticky;
-  top: 70px;
-  z-index: 90;
+  flex: 1;
+  min-width: 0;
 }
 
 .filters-container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 2rem;
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-end;
+  gap: 0.75rem;
 }
 
 .filters-grid {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex: 1;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  min-width: 0;
 }
 
+/* Label above the select keeps each group narrow so wider Japanese labels still fit */
 .filter-group {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .filter-group label {
-  font-size: 0.75rem;
+  font-size: 0.688rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
   color: #64748b;
   white-space: nowrap;
 }
 
 .filter-select {
-  padding: 0.4rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  padding: 0.35rem 0.625rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   font-size: 0.813rem;
   color: #0f172a;
-  background: white;
+  background: #f8fafc;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
   font-weight: 500;
-  min-width: 140px;
+  min-width: 128px;
+  height: 34px;
 }
 
 .filter-select:hover {
-  border-color: #94a3b8;
+  border-color: #cbd5e1;
+  background: white;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: white;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .reset-filters-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
+  width: 34px;
+  height: 34px;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #64748b;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
   flex-shrink: 0;
 }
 
@@ -183,12 +184,12 @@ export default {
 }
 
 .reset-filters-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .reset-filters-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 </style>

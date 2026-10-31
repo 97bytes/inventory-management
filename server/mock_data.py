@@ -35,5 +35,13 @@ recent_transactions = load_json_file('transactions.json')
 # Load purchase orders
 purchase_orders = load_json_file('purchase_orders.json')
 
+# Restocking: per-SKU cost, lead time and supplier for every item in the demand forecast.
+# Needed because the forecast has no cost data and only one forecast SKU exists in inventory.
+restock_catalog = load_json_file('restock_catalog.json')
+
+# Submitted restocking orders. Starts empty and lives in memory only (lost on restart).
+# Kept separate from `orders` so customer-order totals and the dashboard are unaffected.
+restocking_orders = []
+
 # All data is now loaded from JSON files in the data/ directory
 # This allows for easier maintenance and updates of the sample data
